@@ -56,8 +56,9 @@ const Signup = () => {
                 toast.success(res.data.message)
             }
         } catch (error) {
-            console.log(error)
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data?.message || "Registration failed. Please try again.")
+        } finally {
+            dispatch(setLoading(false))
         }
     }
      useEffect(()=>{
@@ -79,7 +80,7 @@ const Signup = () => {
                             value={input.fullname}
                             name="fullname"
                             onChange={changeEventHandler}
-                            placeholder="jyoti"
+                            placeholder="muskan"
                         />
                     </div>
                     <div className='my-2'>
@@ -89,7 +90,7 @@ const Signup = () => {
                             value={input.email}
                             name="email"
                             onChange={changeEventHandler}
-                            placeholder="jyoti@gmail.com"
+                            placeholder="muskan@gmail.com"
                         />
                     </div>
                     <div className='my-2'>
@@ -109,7 +110,7 @@ const Signup = () => {
                             value={input.phoneNumber}
                             name="phoneNumber"
                             onChange={changeEventHandler}
-                            placeholder="87654321"
+                            placeholder="6372374011"
                         />
                     </div>
                     <div className='flex items-center justify-between'>

@@ -9,11 +9,14 @@ import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { setUser } from '@/redux/authSlice'
 import { toast } from 'sonner'
+import ThemeToggle from '../ThemeToggle'
+import NotificationSystem from '../NotificationSystem'
 
 const Navbar = () => {
     const { user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
 
     const logoutHandler = async () => {
         try {
@@ -29,13 +32,13 @@ const Navbar = () => {
         }
     }
     return (
-        <div className='bg-white'>
+        <div className='navbar bg-gray-100 border-b border-gray-200 shadow-sm'>
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
                 <div>
-                    <h1 className='text-2xl font-bold'>Job<span className='text-[#F83002]'>Portal</span></h1>
+                    <h1 className='text-2xl font-bold text-gray-900'>Job<span className='text-[#F83002]'>Portal</span></h1>
                 </div>
                 <div className='flex items-center gap-12'>
-                    <ul className='flex font-medium items-center gap-5'>
+                    <ul className='flex font-medium items-center gap-5 text-gray-700'>
                         {
                             user && user.role === 'recruiter' ? (
                                 <>
@@ -47,6 +50,8 @@ const Navbar = () => {
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="/jobs">Jobs</Link></li>
                                     <li><Link to="/browse">Browse</Link></li>
+                                    <li><Link to="/about">About</Link></li>
+                                    <li><Link to="/contact">Contact</Link></li>
                                 </>
                             )
                         }
@@ -56,17 +61,29 @@ const Navbar = () => {
                     {
                         !user ? (
                             <div className='flex items-center gap-2'>
-                                <Link to="/login"><Button variant="outline">Login</Button></Link>
-                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
+                                <ThemeToggle />
+                                <Link to="/login">
+                                    <Button variant="outline" className='border-gray-300 text-gray-700'>
+                                        Login
+                                    </Button>
+                                </Link>
+                                <Link to="/signup">
+                                    <Button className="bg-[#6A38C2] hover:bg-[#5b30a6] text-white">
+                                        Signup
+                                    </Button>
+                                </Link>
                             </div>
                         ) : (
+                            <div className='flex items-center gap-2'>
+                                <ThemeToggle />
+                                <NotificationSystem />
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className="cursor-pointer">
                                         <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
                                     </Avatar>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-80">
+                                <PopoverContent className="w-80 bg-white border border-gray-200">
                                     <div className=''>
                                         <div className='flex gap-2 space-y-2'>
                                             <Avatar className="cursor-pointer">
@@ -95,6 +112,7 @@ const Navbar = () => {
                                     </div>
                                 </PopoverContent>
                             </Popover>
+                            </div>
                         )
                     }
 

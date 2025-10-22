@@ -11,6 +11,7 @@ import { USER_API_END_POINT } from '@/utils/constant'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setUser } from '@/redux/authSlice'
 import { Loader2 } from 'lucide-react'
+// import ConnectionTest from '../ConnectionTest'
 
 const Login = () => {
     const [input, setInput] = useState({
@@ -24,28 +25,58 @@ const Login = () => {
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
+    
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        
+        // Validation
+        if (!input.email || !input.password || !input.role) {
+            toast.error("Please fill all fields");
+            return;
+        }
+        
+        dispatch(setLoading(true));
+        
+        // Add timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+            dispatch(setLoading(false));
+            toast.error("Request timeout - Check your connection");
+        }, 10000);
+        
         try {
-            dispatch(setLoading(true))
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                withCredentials: true
-            })
-            // console.log(res.data.success)
-            if (res.data.success) {
-                dispatch(setUser(res.data.user))
-                navigate("/")
-                toast.success(res.data.message)
+                withCredentials: true,
+                timeout: 8000
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (res.data && res.data.success) {
+                dispatch(setUser(res.data.user));
+                toast.success(res.data.message || "Login successful");
+                navigate("/");
+            } else {
+                toast.error(res.data?.message || "Login failed");
             }
         } catch (error) {
-            console.log(error)
-            toast.error(error.response?.data?.message || "Login failed")
+            clearTimeout(timeoutId);
+            
+            if (error.code === 'ECONNABORTED') {
+                toast.error("Request timeout. Please try again.");
+            } else if (error.response) {
+                toast.error(error.response.data?.message || "Login failed");
+            } else if (error.request) {
+                toast.error("Unable to connect. Please check your connection.");
+            } else {
+                toast.error("Login failed. Please try again.");
+            }
         } finally {
-            dispatch(setLoading(false))
+            dispatch(setLoading(false));
         }
     }
     useEffect(()=>{
@@ -67,7 +98,7 @@ const Login = () => {
                             value={input.email}
                             name="email"
                             onChange={changeEventHandler}
-                            placeholder="jyoti@gmail.com"
+                            placeholder="muskan@gmail.com"
                         />
                     </div>
                     <div className='my-2'>
@@ -108,7 +139,6 @@ const Login = () => {
                     </div>
                     {
                         loading ? <Button className="w-full my-4"> <Loader2 className="mr-2 h-4 w-4 animate-spin" />Please wait</Button> : <Button type="submit" className="w-full my-4">Login</Button>
-
                     }
 
                     <span className='text-sm'>Donot have an account? <Link to="/signup" className='text-blue-600'>signup</Link></span>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Portal - Test Login</title>
+    <style>
+        body { font-family: Arial; max-width: 400px; margin: 50px auto; padding: 20px; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        .success { color: green; } .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Job Portal Login Test</h2>
+    
+    <input type="email" id="email" placeholder="Email" value="student@test.com">
+    <input type="password" id="password" placeholder="Password" value="123456">
+    <select id="role">
+        <option value="student">Student</option>
+        <option value="recruiter">Recruiter</option>
+    </select>
+    <button onclick="testLogin()">Login</button>
+    
+    <div id="result"></div>
+
+    <script>
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password, role })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('result').innerHTML = 
+                        `<div class="success">✅ Login Successful!<br>Welcome: ${data.user.fullname}</div>`;
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        `<div class="error">❌ ${data.message}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<div class="error">❌ Connection Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

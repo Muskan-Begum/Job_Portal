@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal - Simple Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .message { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .jobs { margin-top: 30px; }
+        .job-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Job Portal - Simple Test</h1>
+    
+    <!-- Login Form -->
+    <div id="loginForm">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="email" value="student@test.com">
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" id="password" value="123456">
+        </div>
+        <div class="form-group">
+            <label>Role:</label>
+            <select id="role">
+                <option value="student">Student</option>
+                <option value="recruiter">Recruiter</option>
+            </select>
+        </div>
+        <button onclick="login()">Login</button>
+        <button onclick="register()" style="background: #28a745; margin-top: 10px;">Register</button>
+    </div>
+
+    <!-- Jobs Section -->
+    <div id="jobsSection" style="display: none;">
+        <h2>Available Jobs</h2>
+        <button onclick="loadJobs()">Load Jobs</button>
+        <div id="jobsList"></div>
+        <button onclick="logout()" style="background: #dc3545; margin-top: 20px;">Logout</button>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+
+        function showMessage(text, type = 'success') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => messageDiv.innerHTML = '', 5000);
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/user/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password, role })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('jobsSection').style.display = 'block';
+                    loadJobs();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Login failed - Check if backend is running', 'error');
+            }
+        }
+
+        async function register() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const fullname = 'Test User';
+
+            try {
+                const response = await fetch(`${API_BASE}/user/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullname, email, password, role })
+                });
+
+                const data = await response.json();
+                showMessage(data.message, data.success ? 'success' : 'error');
+            } catch (error) {
+                showMessage('Registration failed - Check if backend is running', 'error');
+            }
+        }
+
+        async function loadJobs() {
+            try {
+                const response = await fetch(`${API_BASE}/job/get`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const jobsList = document.getElementById('jobsList');
+                    jobsList.innerHTML = data.jobs.map(job => `
+                        <div class="job-card">
+                            <h3>${job.title}</h3>
+                            <p><strong>Company:</strong> ${job.company}</p>
+                            <p><strong>Location:</strong> ${job.location}</p>
+                            <p><strong>Salary:</strong> ${job.salary}</p>
+                            <p>${job.description}</p>
+                            <button onclick="applyJob('${job._id}')" style="background: #28a745;">Apply Now</button>
+                        </div>
+                    `).join('');
+                } else {
+                    showMessage('Failed to load jobs', 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to load jobs - Check backend connection', 'error');
+            }
+        }
+
+        function applyJob(jobId) {
+            showMessage('Application submitted successfully!', 'success');
+        }
+
+        function logout() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('jobsSection').style.display = 'none';
+            showMessage('Logged out successfully', 'success');
+        }
+
+        // Test backend connection on load
+        window.onload = async function() {
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/job/get');
+                if (response.ok) {
+                    showMessage('✅ Backend connected successfully!', 'success');
+                } else {
+                    showMessage('❌ Backend not responding', 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Backend not running - Start the backend first', 'error');
+            }
+        };
+    </script>
+</body>
+</html>

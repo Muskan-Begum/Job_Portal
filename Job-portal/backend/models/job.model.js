@@ -4,53 +4,71 @@ import { Schema, model } from "mongoose"
 const jobSchema = new Schema({
     title: {
         type: String,
-        require: true,
+        required: true,
     },
     description: {
         type: String,
-        require: true,
+        required: true,
     },
     requirements: {
         type: String,
-
     },
+    skills: [{
+        type: String,
+        required: true
+    }],
     salary: {
-        type: Number,
-        require: true,
+        min: { type: Number, required: true },
+        max: { type: Number, required: true },
+        currency: { type: String, default: 'USD' }
     },
     experienceLevel: {
         type: Number,
-        require: true,
-
-
+        required: true
     },
     location: {
         type: String,
-        require: true
+        required: true
+    },
+    isRemote: {
+        type: Boolean,
+        default: false
     },
     jobType: {
         type: String,
-        require: true
+        enum: ['full-time', 'part-time', 'contract', 'internship'],
+        required: true
     },
     position: {
         type: Number,
-        require: true
+        required: true
     },
     company: {
         type: Schema.Types.ObjectId,
         ref: "Company",
-        require: true
+        required: true
     },
     created_by: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        require: true
+        required: true
     },
     application: [{
-
         type: Schema.Types.ObjectId,
         ref: "Application"
-    }]
+    }],
+    status: {
+        type: String,
+        enum: ['active', 'closed', 'draft'],
+        default: 'active'
+    },
+    deadline: {
+        type: Date
+    },
+    views: {
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true })
 
 const jobModel = model("Job", jobSchema);

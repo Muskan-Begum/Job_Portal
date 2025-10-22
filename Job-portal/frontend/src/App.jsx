@@ -14,6 +14,16 @@ import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from './components/admin/PostJob'
 import Applicants from './components/admin/Applicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
+import Analytics from './components/admin/Analytics'
+import AdvancedAnalytics from './components/admin/AdvancedAnalytics'
+import ResumeParser from './components/ResumeParser'
+import ErrorBoundary from './components/ErrorBoundary'
+import ChatSystem from './components/ChatSystem'
+import About from './components/About'
+import Contact from './components/Contact'
+import NotFound from './components/NotFound'
+
+
 
 
 const appRouter = createBrowserRouter([
@@ -70,14 +80,40 @@ const appRouter = createBrowserRouter([
     path:"/admin/jobs/:id/applicants",
     element:<ProtectedRoute><Applicants/></ProtectedRoute> 
   },
+  {
+    path:"/admin/analytics",
+    element:<ProtectedRoute><Analytics/></ProtectedRoute> 
+  },
+  {
+    path:"/admin/advanced-analytics",
+    element:<ProtectedRoute><AdvancedAnalytics/></ProtectedRoute> 
+  },
+  {
+    path:"/resume-parser",
+    element:<ResumeParser/>
+  },
+  {
+    path:"/about",
+    element:<About/>
+  },
+  {
+    path:"/contact",
+    element:<Contact/>
+  },
+  {
+    path:"*",
+    element:<NotFound/>
+  }
 
 ])
 function App() {
-
   return (
-    <div>
-      <RouterProvider router={appRouter} />
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+        <RouterProvider router={appRouter} />
+        <ChatSystem />
+      </div>
+    </ErrorBoundary>
   )
 }
 
