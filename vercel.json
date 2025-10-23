@@ -23,11 +23,5 @@
       "dest": "Job-portal/frontend/dist/$1"
     }
   ],
-  "env": {
-    "MONGO_URI": "@mongo_uri",
-    "SECRET_KEY": "@secret_key",
-    "CLOUD_NAME": "@cloud_name",
-    "API_KEY": "@api_key",
-    "API_SECRET": "@api_secret"
-  }
+
 }
