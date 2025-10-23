@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Job-portal/backend/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "Job-portal/frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "Job-portal/backend/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "Job-portal/frontend/dist/$1"
+    }
+  ],
+  "env": {
+    "MONGO_URI": "@mongo_uri",
+    "SECRET_KEY": "@secret_key",
+    "CLOUD_NAME": "@cloud_name",
+    "API_KEY": "@api_key",
+    "API_SECRET": "@api_secret"
+  }
+}
