@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#6A38C2" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Job Portal - Enhanced</title>
+    <style>
+      /* Force all backgrounds white in light mode */
+      html:not(.dark) {
+        background-color: #ffffff !important;
+      }
+      html:not(.dark) body {
+        background-color: #ffffff !important;
+      }
+      html:not(.dark) #root {
+        background-color: #ffffff !important;
+      }
+      html:not(.dark) div {
+        background-color: #ffffff !important;
+      }
+      
+      /* Keep navbar gray in both modes */
+      .navbar {
+        background-color: #f3f4f6 !important;
+      }
+      
+      /* Dark mode */
+      html.dark {
+        background-color: #0f172a !important;
+      }
+      html.dark body {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+      }
+      
+      html.dark .navbar {
+        background-color: #f3f4f6 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
