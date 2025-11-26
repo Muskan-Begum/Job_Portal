@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    @apply transition-colors duration-300;
+  }
+  
+  body {
+    @apply bg-white text-gray-900 dark:bg-gray-800 dark:text-white transition-colors duration-300;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  /* Global text color fixes */
+  * {
+    color: black !important;
+  }
+  
+  .dark * {
+    color: white !important;
+  }
+  
+  /* Preserve brand colors */
+  .text-\[\#F83002\], [class*="text-red"], [class*="text-blue"], [class*="text-green"] {
+    color: inherit !important;
+  }
+  
+  .text-\[\#F83002\] {
+    color: #F83002 !important;
+  }
+}
