@@ -120,20 +120,7 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` with your credentials:
-```env
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/jobportal
-SECRET_KEY=your-jwt-secret-key
-CLOUD_NAME=your-cloudinary-name
-API_SECRET=your-cloudinary-secret
-API_KEY=your-cloudinary-key
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-FRONTEND_URL=http://localhost:5173
-PORT=8000
-```
+Edit `.env` with your credentials (see `.env.example` for required variables)
 
 4. **Start development server**
 ```bash
@@ -159,10 +146,7 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env`:
-```env
-VITE_API_URL=http://localhost:8000
-```
+Edit `.env` with your API URL (see `.env.example`)
 
 4. **Start development server**
 ```bash
@@ -319,7 +303,7 @@ This project is licensed under the ISC License.
 
 ## 📞 Support
 
-For support, email your-email@example.com or open an issue on GitHub.
+For support, open an issue on GitHub: [Job Portal Issues](https://github.com/Muskan-Begum/Job_Portal/issues)
 
 ---
 
